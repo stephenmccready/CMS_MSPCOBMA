@@ -1,0 +1,119 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+
+Create procedure [dbo].[ImportMSPCOBMA] @path As varChar(128), @filename As varChar(128)
+As
+
+Begin
+/* Intial Set up of raw data table
+Drop Table [dbo].[tbl_MSPCOBMA_In]
+Create Table [dbo].[tbl_MSPCOBMA_In] (col001 varchar(max))
+*/
+
+Truncate Table [dbo].[tbl_MSPCOBMA_In]
+
+Declare @BulkCmd As nvarChar(MAX)
+Set		@BulkCmd = "BULK INSERT tbl_MSPCOBMA_In FROM '"+@path+@filename+"' WITH (FIELDTERMINATOR = '\n')"
+
+Exec	(@BulkCmd)
+
+Declare @today As DateTime 
+Set @today=getDate()
+
+Insert	Into [dbo].[tbl_MSPCOBMA_Detail]
+Select	Cast(SUBSTRING(MI.Col001,1,12) As VarChar(12)) As [CAN],
+		Cast(SUBSTRING(MI.Col001,13,2) As VarChar(2)) As [BIC],
+		Cast(SUBSTRING(MI.Col001,15,1) As VarChar(1)) As [DeleteIndicator],
+		Cast(SUBSTRING(MI.Col001,16,26) As VarChar(1)) As [ValidityIndicator],
+		Cast(SUBSTRING(MI.Col001,17,1) As VarChar(1)) As [MSPCode],
+		Cast(SUBSTRING(MI.Col001,18,5) As VarChar(5)) As [ContractorNumber],
+		Cast(SUBSTRING(MI.Col001,23,8) As VarChar(8)) As [DataEntryAdded],
+		Cast(SUBSTRING(MI.Col001,31,5) As VarChar(5)) As [UpdatingContractor],
+		Cast(SUBSTRING(MI.Col001,36,8) As VarChar(8)) As [MaintenanceDate],
+		Cast(SUBSTRING(MI.Col001,44,2) As VarChar(2)) As [CWFOccurrenceNumber],
+		Cast(SUBSTRING(MI.Col001,46,4) As VarChar(4)) As [Filler01],
+		Cast(SUBSTRING(MI.Col001,50,1) As VarChar(1)) As [InsurerType],
+		Cast(SUBSTRING(MI.Col001,51,32) As VarChar(32)) As [InsurersName],
+		Cast(SUBSTRING(MI.Col001,83,32) As VarChar(32)) As [InsurersAddress-1],
+		Cast(SUBSTRING(MI.Col001,115,32) As VarChar(32)) As [InsurersAddress-2],
+		Cast(SUBSTRING(MI.Col001,147,15) As VarChar(15)) As [InsurersCity],
+		Cast(SUBSTRING(MI.Col001,162,2) As VarChar(2)) As [InsurersStateCode],
+		Cast(SUBSTRING(MI.Col001,164,9) As VarChar(9)) As [InsurersZipCode],
+		Cast(SUBSTRING(MI.Col001,173,17) As VarChar(17)) As [PolicyNumber],
+		Cast(SUBSTRING(MI.Col001,190,8) As VarChar(8)) As [MSPEffective Date],
+		Cast(SUBSTRING(MI.Col001,198,8) As VarChar(8)) As [MSPTermination],
+		Cast(SUBSTRING(MI.Col001,206,2) As VarChar(2)) As [PatientRelationship],
+		Cast(SUBSTRING(MI.Col001,208,9) As VarChar(9)) As [SubscriberFirstName],
+		Cast(SUBSTRING(MI.Col001,217,16) As VarChar(16)) As [SubscriberLastNamePolicyholder],
+		Cast(SUBSTRING(MI.Col001,233,12) As VarChar(12)) As [EmployeeIDNumber],
+		Cast(SUBSTRING(MI.Col001,245,2) As VarChar(2)) As [SourceCode],
+		Cast(SUBSTRING(MI.Col001,247,1) As VarChar(1)) As [EmployeeDataCode],
+		Cast(SUBSTRING(MI.Col001,248,32) As VarChar(32)) As [EmployerName],
+		Cast(SUBSTRING(MI.Col001,280,32) As VarChar(32)) As [EmployersAddress1],
+		Cast(SUBSTRING(MI.Col001,312,32) As VarChar(32)) As [EmployersAddress2],
+		Cast(SUBSTRING(MI.Col001,344,15) As VarChar(15)) As [EmployersCity],
+		Cast(SUBSTRING(MI.Col001,359,2) As VarChar(2)) As [EmployersState],
+		Cast(SUBSTRING(MI.Col001,361,9) As VarChar(9)) As [EmployersZipCode],
+		Cast(SUBSTRING(MI.Col001,370,20) As VarChar(20)) As [InsuranceGroupNumber],
+		Cast(SUBSTRING(MI.Col001,390,17) As VarChar(17)) As [InsuranceGroup],
+		Cast(SUBSTRING(MI.Col001,407,8) As VarChar(8)) As [PrepaidHealthPlanDate],
+		Cast(SUBSTRING(MI.Col001,415,2) As VarChar(2)) As [RemarksCode-1],
+		Cast(SUBSTRING(MI.Col001,417,2) As VarChar(2)) As [RemarksCode-2],
+		Cast(SUBSTRING(MI.Col001,419,2) As VarChar(2)) As [RemarksCode-3],
+		Cast(SUBSTRING(MI.Col001,421,1) As VarChar(1)) As [DiagnosisCodeIndicator],
+		Cast(SUBSTRING(MI.Col001,422,7) As VarChar(7)) As [DiagnosisCode],
+		Cast(SUBSTRING(MI.Col001,429,8) As VarChar(8)) As [DiagnosisCodeOccurrence2],
+		Cast(SUBSTRING(MI.Col001,437,8) As VarChar(8)) As [DiagnosisCodeOccurrence3],
+		Cast(SUBSTRING(MI.Col001,445,8) As VarChar(8)) As [DiagnosisCodeOccurrence4],
+		Cast(SUBSTRING(MI.Col001,453,8) As VarChar(8)) As [DiagnosisCodeOccurrence5],
+		Cast(SUBSTRING(MI.Col001,461,8) As VarChar(8)) As [DiagnosisCodeOccurrence6],
+		Cast(SUBSTRING(MI.Col001,469,8) As VarChar(8)) As [DiagnosisCodeOccurrence7],
+		Cast(SUBSTRING(MI.Col001,477,8) As VarChar(8)) As [DiagnosisCodeOccurrence8],
+		Cast(SUBSTRING(MI.Col001,485,8) As VarChar(8)) As [DiagnosisCodeOccurrence9],
+		Cast(SUBSTRING(MI.Col001,493,8) As VarChar(8)) As [DiagnosisCodeOccurrence10],
+		Cast(SUBSTRING(MI.Col001,501,8) As VarChar(8)) As [DiagnosisCodeOccurrence11],
+		Cast(SUBSTRING(MI.Col001,509,8) As VarChar(8)) As [DiagnosisCodeOccurrence12],
+		Cast(SUBSTRING(MI.Col001,517,8) As VarChar(8)) As [DiagnosisCodeOccurrence13],
+		Cast(SUBSTRING(MI.Col001,525,8) As VarChar(8)) As [DiagnosisCodeOccurrence14],
+		Cast(SUBSTRING(MI.Col001,533,8) As VarChar(8)) As [DiagnosisCodeOccurrence15],
+		Cast(SUBSTRING(MI.Col001,541,8) As VarChar(8)) As [DiagnosisCodeOccurrence16],
+		Cast(SUBSTRING(MI.Col001,549,8) As VarChar(8)) As [DiagnosisCodeOccurrence17],
+		Cast(SUBSTRING(MI.Col001,557,8) As VarChar(8)) As [DiagnosisCodeOccurrence18],
+		Cast(SUBSTRING(MI.Col001,565,8) As VarChar(8)) As [DiagnosisCodeOccurrence19],
+		Cast(SUBSTRING(MI.Col001,573,8) As VarChar(8)) As [DiagnosisCodeOccurrence20],
+		Cast(SUBSTRING(MI.Col001,581,8) As VarChar(8)) As [DiagnosisCodeOccurrence21],
+		Cast(SUBSTRING(MI.Col001,589,8) As VarChar(8)) As [DiagnosisCodeOccurrence22],
+		Cast(SUBSTRING(MI.Col001,597,8) As VarChar(8)) As [DiagnosisCodeOccurrence23],
+		Cast(SUBSTRING(MI.Col001,605,8) As VarChar(8)) As [DiagnosisCodeOccurrence24],
+		Cast(SUBSTRING(MI.Col001,613,8) As VarChar(8)) As [DiagnosisCodeOccurrence25],
+		Cast(SUBSTRING(MI.Col001,621,10) As VarChar(10)) As [PayerID],
+		Cast(SUBSTRING(MI.Col001,631,616) As VarChar(616)) As [MSPDataOccurrenceNumber2],
+		Cast(SUBSTRING(MI.Col001,1247,616) As VarChar(616)) As [MSPDataOccurrenceNumber3],
+		Cast(SUBSTRING(MI.Col001,1863,616) As VarChar(616)) As [MSPDataOccurrenceNumber4],
+		Cast(SUBSTRING(MI.Col001,2479,616) As VarChar(616)) As [MSPDataOccurrenceNumber5],
+		Cast(SUBSTRING(MI.Col001,3095,616) As VarChar(616)) As [MSPDataOccurrenceNumber6],
+		Cast(SUBSTRING(MI.Col001,3711,616) As VarChar(616)) As [MSPDataOccurrenceNumber7],
+		Cast(SUBSTRING(MI.Col001,4327,616) As VarChar(616)) As [MSPDataOccurrenceNumber8],
+		Cast(SUBSTRING(MI.Col001,4943,616) As VarChar(616)) As [MSPDataOccurrenceNumber9],
+		Cast(SUBSTRING(MI.Col001,5559,616) As VarChar(616)) As [MSPDataOccurrenceNumber10],
+		Cast(SUBSTRING(MI.Col001,6175,616) As VarChar(616)) As [MSPDataOccurrenceNumber11],
+		Cast(SUBSTRING(MI.Col001,6791,616) As VarChar(616)) As [MSPDataOccurrenceNumber12],
+		Cast(SUBSTRING(MI.Col001,7407,616) As VarChar(616)) As [MSPDataOccurrenceNumber13],
+		Cast(SUBSTRING(MI.Col001,8023,616) As VarChar(616)) As [MSPDataOccurrenceNumber14],
+		Cast(SUBSTRING(MI.Col001,8639,616) As VarChar(616)) As [MSPDataOccurrenceNumber15],
+		Cast(SUBSTRING(MI.Col001,9255,616) As VarChar(616)) As [MSPDataOccurrenceNumber16],
+		Cast(SUBSTRING(MI.Col001,9871,616) As VarChar(616)) As [MSPDataOccurrenceNumber17],
+		Cast(SUBSTRING(MI.Col001,10487,515) As VarChar(515)) As [Filler02],
+		@today As DateImported,
+		@filename As [FileName]
+From	[dbo].[tbl_MSPCOBMA_In] As MI
+Left	Outer Join [dbo].[tbl_MSPCOBMA_Detail] As MD
+		On MD.[CAN]=SUBSTRING(MI.Col001,1,12)
+		And MD.[BIC]=SUBSTRING(MI.Col001,13,2) 
+		And MD.[FileName]=@filename
+Where	SUBSTRING(MI.Col001,13,2) <> ' '
+        And MD.[CAN] Is Null
+		And MD.[BIC] Is Null
+End

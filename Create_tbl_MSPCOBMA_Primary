@@ -40,3 +40,8 @@ CREATE TABLE [dbo].[tbl_MSPCOBMA_Primary](
 	[DateImported] [datetime] NULL,
 	[FileName] [varchar](34) NOT NULL
 ) ON [PRIMARY]
+
+
+Create Index ix_HICN On tbl_MSPCOBMA_Primary(HICN)
+Create Clustered Index ix_DateImported On tbl_MSPCOBMA_Primary(DateImported)
+Create Index ix_FileName On tbl_MSPCOBMA_Primary([FileName])

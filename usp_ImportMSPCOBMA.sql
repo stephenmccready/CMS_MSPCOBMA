@@ -202,7 +202,7 @@ Select	  Cast(SubString(MI.Col001,1,8) As VarChar(8)) As [TrailerCode]
 		, Cast(SubString(MI.Col001,9,4) As VarChar(4)) As [SendingEntity]
 		, Cast(SubString(MI.Col001,13,8) As VarChar(8)) As [FileCreationDate]
 		, Cast(SubString(MI.Col001,21,8) As VarChar(8)) As [TotalPrimary]
-		, Cast(SubString(MI.Col001,29,8) As VarChar(8)) As [TotalDetail]
+		, Cast(SubString(MI.Col001,29,8) As VarChar(8)) As [TotalRecords]
 		, Cast(SubString(MI.Col001,37,664) As VarChar(664)) As [Filler1]
 		, @today As DateImported
 		, @filename As [FileName]

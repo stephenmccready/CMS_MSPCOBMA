@@ -1,7 +1,8 @@
+If Object_ID('[dbo].[tbl_MSPCOBMA_Detail]') Is Not Null Drop Table [dbo].[tbl_MSPCOBMA_Detail]
 CREATE TABLE [dbo].[tbl_MSPCOBMA_Detail](
-	[RecordType] [varchar](3) NULL,
-	[MSPOccurence] [varchar](2) NULL,
-	[HICN] [varchar](12) NULL,
+	[File Date] Date NULL,
+	[RecordType] [varchar](5) NULL,
+	[BeneficiaryID] [varchar](12) NULL,
 	[DeleteInd] [varchar](1) NULL,
 	[ValidityIndicator] [varchar](1) NULL,
 	[MSPCode] [varchar](1) NULL,
@@ -9,7 +10,8 @@ CREATE TABLE [dbo].[tbl_MSPCOBMA_Detail](
 	[DataEntryAdded] [varchar](8) NULL,
 	[UpdatingContractor] [varchar](5) NULL,
 	[MaintenanceDate] [varchar](8) NULL,
-	[Filler01] [varchar](4) NULL,
+	[CWFOccurrence] [varchar](2) NULL,
+	[Filler] [varchar](4) NULL,
 	[InsurerType] [varchar](1) NULL,
 	[InsurersName] [varchar](32) NULL,
 	[InsurersAddress-1] [varchar](32) NULL,
@@ -89,11 +91,11 @@ CREATE TABLE [dbo].[tbl_MSPCOBMA_Detail](
 	[DiagnosisCode24] [varchar](7) NULL,
 	[DiagnosisCodeInd25] [varchar](1) NULL,
 	[DiagnosisCode25] [varchar](7) NULL,
-	[Filler02] [varchar](67) NULL,
+	[Filler2] [varchar](67) NULL,
 	[DateImported] [datetime] NULL,
 	[FileName] [varchar](128) NULL
 ) ON [PRIMARY]
 
-Create Index ix_HICN On tbl_MSPCOBMA_Detail(HICN)
+Create Index ix_BeneficiaryID On tbl_MSPCOBMA_Detail(BeneficiaryID)
 Create Clustered Index ix_DateImported On tbl_MSPCOBMA_Detail(DateImported)
 Create Index ix_FileName On tbl_MSPCOBMA_Detail([FileName])

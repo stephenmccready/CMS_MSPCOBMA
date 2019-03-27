@@ -1,6 +1,9 @@
+
+If Object_ID('[dbo].[tbl_MSPCOBMA_Primary]') Is Not Null Drop Table [dbo].[tbl_MSPCOBMA_Primary]
 CREATE TABLE [dbo].[tbl_MSPCOBMA_Primary](
+	[File Date] Date NULL,
 	[RecordType] [varchar](3) NULL,
-	[HICN] [varchar](12) NULL,
+	[BeneficiaryID] [varchar](12) NULL,
 	[DetailCount] [varchar](2) NULL,
 	[DateOfBirth] [varchar](8) NULL,
 	[SexCode] [varchar](1) NULL,
@@ -38,10 +41,9 @@ CREATE TABLE [dbo].[tbl_MSPCOBMA_Primary](
 	[PAID_FLAG_ADJ4] [varchar](1) NULL,
 	[Filler] [varchar](526) NULL,
 	[DateImported] [datetime] NULL,
-	[FileName] [varchar](34) NOT NULL
+	[FileName] [varchar](128) NOT NULL
 ) ON [PRIMARY]
 
-
-Create Index ix_HICN On tbl_MSPCOBMA_Primary(HICN)
+Create Index ix_HICN On tbl_MSPCOBMA_Primary(BeneficiaryID)
 Create Clustered Index ix_DateImported On tbl_MSPCOBMA_Primary(DateImported)
 Create Index ix_FileName On tbl_MSPCOBMA_Primary([FileName])
